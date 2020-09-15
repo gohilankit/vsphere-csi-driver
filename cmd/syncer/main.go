@@ -22,10 +22,11 @@ import (
 	"fmt"
 	"os"
 
-	"sigs.k8s.io/vsphere-csi-driver/pkg/csi/service/logger"
-
 	"github.com/kubernetes-csi/csi-lib-utils/leaderelection"
 	cnstypes "github.com/vmware/govmomi/cns/types"
+
+	"sigs.k8s.io/vsphere-csi-driver/pkg/csi/service/logger"
+	"sigs.k8s.io/vsphere-csi-driver/pkg/syncer/admissionhandler"
 
 	csitypes "sigs.k8s.io/vsphere-csi-driver/pkg/csi/types"
 	k8s "sigs.k8s.io/vsphere-csi-driver/pkg/kubernetes"
@@ -79,6 +80,25 @@ func main() {
 				os.Exit(1)
 			}
 		}()
+	}
+	if clusterFlavor == cnstypes.CnsClusterFlavorVanilla || clusterFlavor == "" || clusterFlavor == cnstypes.CnsClusterFlavorWorkload {
+		go func() {
+			var cert = configInfo.Cfg.Global.AdmissionWebHookCertificate
+			var key = configInfo.Cfg.Global.AdmissionWebHookKey
+			var port = configInfo.Cfg.Global.AdmissionWebHookPort
+
+			if cert == "" {
+				log.Warnf("missing admission-webhook-cert in the vsphere-config-secret")
+			}
+			if key == "" {
+				log.Warnf("missing admission-webhook-key in the vsphere-config-secret")
+			}
+			if webHookStartError := admissionhandler.StartWebhookServer(ctx, cert, key, port); webHookStartError != nil {
+				log.Errorf("failed to start webhook server. err: %v", webHookStartError)
+				os.Exit(1)
+			}
+		}()
+
 	}
 
 	// Initialize syncer components that are dependant on the outcome of leader election, if enabled.

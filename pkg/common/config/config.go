@@ -160,6 +160,15 @@ func FromEnv(ctx context.Context, cfg *Config) error {
 			cfg.Global.InsecureFlag = InsecureFlag
 		}
 	}
+	if v := os.Getenv("WEBHOOK_CERT"); v != "" {
+		cfg.Global.AdmissionWebHookCertificate = v
+	}
+	if v := os.Getenv("WEBHOOK_KEY"); v != "" {
+		cfg.Global.AdmissionWebHookKey = v
+	}
+	if v := os.Getenv("WEBHOOK_PORT"); v != "" {
+		cfg.Global.AdmissionWebHookPort = v
+	}
 	if v := os.Getenv("VSPHERE_LABEL_REGION"); v != "" {
 		cfg.Labels.Region = v
 	}
@@ -481,6 +490,7 @@ func GetSupervisorNamespace(ctx context.Context) (string, error) {
 
 // GetClusterFlavor returns the cluster flavor based on the env variable set in the driver deployment file
 func GetClusterFlavor(ctx context.Context) (cnstypes.CnsClusterFlavor, error) {
+	log := logger.GetLogger(ctx)
 	// CLUSTER_FLAVOR is defined only in Supervisor and Guest cluster deployments.
 	// If it is empty, it is implied that cluster flavor is Vanilla K8S
 	clusterFlavor := cnstypes.CnsClusterFlavor(os.Getenv("CLUSTER_FLAVOR"))
@@ -489,5 +499,7 @@ func GetClusterFlavor(ctx context.Context) (cnstypes.CnsClusterFlavor, error) {
 	} else if clusterFlavor == cnstypes.CnsClusterFlavorGuest || clusterFlavor == cnstypes.CnsClusterFlavorWorkload || clusterFlavor == cnstypes.CnsClusterFlavorVanilla {
 		return clusterFlavor, nil
 	}
-	return "", fmt.Errorf("Unrecognized value set for CLUSTER_FLAVOR")
+	errMsg := "unrecognized value set for CLUSTER_FLAVOR"
+	log.Error(errMsg)
+	return "", fmt.Errorf(errMsg)
 }

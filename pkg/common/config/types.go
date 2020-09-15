@@ -46,6 +46,12 @@ type Config struct {
 		// VCClientTimeout specifies a time limit in minutes for requests made by client
 		// If not set, default will be 5 minutes
 		VCClientTimeout int `gcfg:"vc-client-timeout"`
+		// AdmissionWebHookCertificate is the certificate string using which http server should be created
+		AdmissionWebHookCertificate string `gcfg:"admission-webhook-cert"`
+		// AdmissionWebHookKey is the private key string using which http server should be created
+		AdmissionWebHookKey string `gcfg:"admission-webhook-key"`
+		// AdmissionWebHookPort is the port on which http server should be starting
+		AdmissionWebHookPort string `gcfg:"admission-webhook-port"`
 	}
 
 	// Multiple sets of Net Permissions applied to all file shares

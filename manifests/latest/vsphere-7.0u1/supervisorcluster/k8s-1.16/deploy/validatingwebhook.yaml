@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sc-validation-webhook-svc
+  namespace: vmware-system-csi
+  labels:
+    app: vsphere-csi-controller
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+  selector:
+    app: vsphere-csi-controller
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validation.csi.vsphere.vmware.com
+webhooks:
+  - name: scvalidation.csi.vsphere.vmware.com
+    clientConfig:
+      service:
+        name: sc-validation-webhook-svc
+        namespace: vmware-system-csi
+        path: "/validate-storageclass"
+      caBundle: ${CA_BUNDLE}
+    rules:
+      - apiGroups:   ["storage.k8s.io"]
+        apiVersions: ["v1", "v1beta1"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["storageclasses"]
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
+  - name: rvvalidation.csi.vsphere.vmware.com
+    clientConfig:
+      service:
+        name: sc-validation-webhook-svc
+        namespace: vmware-system-csi
+        path: "/validate-registervolume"
+      caBundle: ${CA_BUNDLE}
+    rules:
+      - apiGroups:   ["cns.vmware.com"]
+        apiVersions: ["v1", "v1alpha1"]
+        operations:  ["CREATE", "UPDATE"]
+        resources:   ["cnsregistervolumes"]
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+    failurePolicy: Fail
