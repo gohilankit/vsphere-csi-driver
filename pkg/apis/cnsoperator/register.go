@@ -28,6 +28,7 @@ import (
 	cnsfileaccessconfigv1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/cnsfileaccessconfig/v1alpha1"
 	cnsnodevmattachmentv1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/cnsnodevmattachment/v1alpha1"
 	cnsregistervolumev1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/cnsregistervolume/v1alpha1"
+	cnsunregistervolumev1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/cnsunregistervolume/v1alpha1"
 	cnsvolumemetadatav1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/cnsvolumemetadata/v1alpha1"
 	storagepolicyv1alpha1 "sigs.k8s.io/vsphere-csi-driver/v3/pkg/apis/cnsoperator/storagepolicy/v1alpha1"
 )
@@ -51,6 +52,8 @@ var (
 	CnsVolumeMetadataPlural = "cnsvolumemetadatas"
 	// CnsRegisterVolumePlural is plural of CnsRegisterVolume
 	CnsRegisterVolumePlural = "cnsregistervolumes"
+	// CnsUnregisterVolumePlural is plural of CnsUnregisterVolume
+	CnsUnregisterVolumePlural = "cnsunregistervolumes"
 	// CnsFileAccessConfigPlural is plural of CnsFileAccessConfig
 	CnsFileAccessConfigPlural = "cnsfileaccessconfigs"
 	// CnsStoragePolicyUsageSingular is singular of StoragePolicyUsage
@@ -93,6 +96,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		SchemeGroupVersion,
 		&cnsregistervolumev1alpha1.CnsRegisterVolume{},
 		&cnsregistervolumev1alpha1.CnsRegisterVolumeList{},
+	)
+
+	scheme.AddKnownTypes(
+		SchemeGroupVersion,
+		&cnsunregistervolumev1alpha1.CnsUnregisterVolume{},
+		&cnsunregistervolumev1alpha1.CnsUnregisterVolumeList{},
 	)
 
 	scheme.AddKnownTypes(
