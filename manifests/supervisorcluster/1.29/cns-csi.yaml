@@ -14,7 +14,7 @@ rules:
     verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["persistentvolumeclaims"]
-    verbs: ["get", "list", "watch", "create", "update", "patch"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: [""]
     resources: ["persistentvolumes"]
     verbs: ["get", "list", "watch", "update", "create", "delete", "patch"]
@@ -46,7 +46,7 @@ rules:
     resources: ["cnsfilevolumeclients"]
     verbs: ["get", "update", "create", "delete"]
   - apiGroups: ["cns.vmware.com"]
-    resources: ["cnsregistervolumes"]
+    resources: ["cnsregistervolumes", "cnsunregistervolumes"]
     verbs: ["get", "list", "watch", "update", "delete"]
   - apiGroups: ["cns.vmware.com"]
     resources: ["triggercsifullsyncs"]
@@ -134,7 +134,7 @@ metadata:
   name: vsphere-admin-csi-role
 rules:
   - apiGroups: ["cns.vmware.com"]
-    resources: ["cnsregistervolumes"]
+    resources: ["cnsregistervolumes", "cnsunregistervolumes"]
     verbs: ["get", "list", "create", "delete", "watch"]
   - apiGroups: [""]
     resources: ["persistentvolumeclaims"]
