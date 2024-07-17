@@ -1,0 +1,6 @@
+apiVersion: cns.vmware.com/v1alpha1
+kind: CnsUnregisterVolume
+metadata:
+  name: unregister-pvc-1
+spec:
+  pvcName: vanilla-rwo-pvc

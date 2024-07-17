@@ -1,0 +1,8 @@
+apiVersion: cns.vmware.com/v1alpha1
+kind: CnsRegisterVolume
+metadata:
+  name: register-pvc-1
+spec:
+  pvcName: vanilla-rwo-pvc
+  volumeID: 8e4aa268-ca81-408c-9fb1-d27d7c36e638
+  accessMode: ReadWriteOnce
